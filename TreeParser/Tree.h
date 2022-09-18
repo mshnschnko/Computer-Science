@@ -10,7 +10,7 @@ public:
 	Tree(Tree const& tree) = default;
 	Tree(Tree&& tree) = default;
 	void parse(std::string filename);
-	void printway(std::string name1, std::string name2);
+	void printWay(std::string name1, std::string name2);
 	~Tree();
 private:
 	class Node {

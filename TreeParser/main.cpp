@@ -12,7 +12,7 @@ void MemoryLeaks(void)
 int main() {
 	Tree t;
 	t.parse("testdoc.txt");
-	t.printway("FirstSon", "Fourth");
+	t.printWay("FirstSon", "Fourth");
 	MemoryLeaks();
 	return 0;
 }

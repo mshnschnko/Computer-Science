@@ -1,6 +1,4 @@
 #include "Tree.h"
-#include <algorithm>
-//Tree::Tree(Tree const& tree) {}
 
 //void Tree::copySons(Node* node) {
 //	if (node) {
@@ -36,7 +34,6 @@ void Tree::parse(std::string filename) {
 		int rootCloser = text.find(">");
 		if (rootOpener < text.length() && rootCloser < text.length() && rootOpener < rootCloser) {
 			root->name = text.substr(rootOpener + 1, rootCloser - rootOpener - 1);
-			std::cout << root->name << std::endl;
 			text.erase(0, rootCloser + 1);
 		}
 		Node* curr = root;
@@ -47,8 +44,7 @@ void Tree::parse(std::string filename) {
 				break;
 			std::string name;
 			if (opener < text.length() && closer < text.length() && opener < closer) {
-				name = text.substr(opener + 1, closer - opener - 1); //подстрокой достаем название
-				std::cout << name << std::endl;
+				name = text.substr(opener + 1, closer - opener - 1);
 				text.erase(0, closer + 1);
 			}
 			if ("/" + curr->name != name) {
@@ -67,19 +63,17 @@ void Tree::parse(std::string filename) {
 		std::cout << "Unable to open file";
 }
 
-void Tree::printway(std::string name1, std::string name2) {
+void Tree::printWay(std::string name1, std::string name2) {
 	Node* node1 = searchWay(root, name1);
 	Node* node2 = searchWay(root, name2);
 	std::vector<Node*> way1;
 	Node* curr = node1;
-	//std::string way1 = node1->name;
 	while (curr) {
 		way1.push_back(curr);
 		curr = curr->parent;
 	}
 	std::vector<Node*> way2;
 	curr = node2;
-	//std::string way2 = node2->name;
 	while (curr) {
 		way2.push_back(curr);
 		curr = curr->parent;
