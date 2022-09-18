@@ -7,7 +7,7 @@
 class Tree {
 public:
 	Tree() : root(new Node()) {};
-	Tree(Tree const& tree);
+	Tree(Tree const& tree) = default;
 	Tree(Tree&& tree) = default;
 	void parse(std::string filename);
 	void printway(std::string name1, std::string name2);
@@ -28,7 +28,8 @@ private:
 		std::vector<Node*> sons;
 		Node* parent;
 	};
-	void 
+	Node* searchWay(Node* node, std::string name);
+	void copySons(Node* node);
 	void freeTree(Node* node);
 	Node* root;
 };
