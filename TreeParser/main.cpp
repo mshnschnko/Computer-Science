@@ -12,7 +12,19 @@ void MemoryLeaks(void)
 int main() {
 	Tree t;
 	t.parse("testdoc.txt");
+	t.printTree();
 	t.printWay("FirstSon", "Fourth");
+	Tree t2(std::move(t));
+	t.printTree();
+	t2.printTree();
+	std::cout << std::string(10, '=') << std::endl;
+	Tree t3;
+	std::cout << std::string(10, '=') << "t3" << std::endl;
+	t3 = std::move(t2);
+	t3.printTree();
+	//Tree t4(t3);
+	//std::cout << std::string(10, '=') << "t4" << std::endl;
+	//t4.printTree();
 	MemoryLeaks();
 	return 0;
 }

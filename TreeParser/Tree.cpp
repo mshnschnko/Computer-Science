@@ -1,23 +1,37 @@
 #include "Tree.h"
 
-//void Tree::copySons(Node* node) {
-//	if (node) {
-//		if (!node->sons.empty()) {
-//			for (Node* son : node->sons) {
-//				copySons(son);
-//			}
-//		}
-//		node->name;
-//	}
-//}
-//
-//Tree::Tree(Tree const& tree) {
-//	root = new Node();
-//	root->name = tree.root->name;
-//
-//}
+Tree::Tree(Tree const& tree) {
+	copyTree(tree.root);
+}
 
+Tree::Node* Tree::copyTree(Node* nodeForCopy) {
+	if (!nodeForCopy) {
+		return nullptr;
+	}
+	//node->name = nodeForCopy->name;
+	//node->level = nodeForCopy->level;
+	//node->parent = nodeForCopy->parent;
+	Node* newNode = new Node(nodeForCopy->parent, nodeForCopy->name, nodeForCopy->level);
+	if (!nodeForCopy->sons.empty()) {
+		for (Node* son : nodeForCopy->sons) {
+			newNode->sons.push_back(copyTree(son));
+			newNode->sons.back()->parent = newNode;
+		}
+	}
+	return newNode;
+}
 
+Tree::Tree(Tree&& tree) {
+	root = tree.root;
+	tree.root = nullptr;
+}
+
+Tree& Tree::operator= (Tree&& tree) noexcept{
+	root = tree.root;
+	tree.root = nullptr;
+	//delete &tree;
+	return *this;
+}
 
 void Tree::parse(std::string filename) {
 	std::ifstream file(filename);
@@ -37,6 +51,7 @@ void Tree::parse(std::string filename) {
 			text.erase(0, rootCloser + 1);
 		}
 		Node* curr = root;
+		int level = 0;
 		while (text.length() > 0) {
 			int opener = text.find("<");
 			int closer = text.find(">");
@@ -48,12 +63,14 @@ void Tree::parse(std::string filename) {
 				text.erase(0, closer + 1);
 			}
 			if ("/" + curr->name != name) {
-				Node* newNode = new Node(curr, name);
+				level++;
+				Node* newNode = new Node(curr, name, level);
 				curr->sons.push_back(newNode);
 				curr = newNode;
 			}
 			else {
 				if (curr->parent) {
+					level--;
 					curr = curr->parent;
 				}
 			}
@@ -84,7 +101,6 @@ void Tree::printWay(std::string name1, std::string name2) {
 		way1.pop_back();
 		way2.pop_back();
 	}
-	std::cout << std::endl << std::endl << std::endl << "ways" << std::endl;
 	for (int i = 0; i < way1.size(); i++) {
 		std::cout << way1[i]->name << "->";
 	}
@@ -93,7 +109,7 @@ void Tree::printWay(std::string name1, std::string name2) {
 	for (int i = way2.size() - 1; i > 0; i--) {
 		std::cout << way2[i]->name << "->";
 	}
-	std::cout << way2[0]->name;
+	std::cout << way2[0]->name << std::endl;
 }
 
 Tree::Node* Tree::searchWay(Node* node, std::string name) {
@@ -111,6 +127,19 @@ Tree::Node* Tree::searchWay(Node* node, std::string name) {
 	}
 	else {
 		return nullptr;
+	}
+}
+
+void Tree::printTree() {
+	printNode(root);
+}
+
+void Tree::printNode(Node* node) {
+	if (node) {
+		std::cout << std::string(node->level, '\t') << node->name << std::endl;
+		for (Node* son : node->sons) {
+			printNode(son);
+		}
 	}
 }
 
